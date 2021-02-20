@@ -9,8 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^12.5.1",
     "@discordjs/opus": "^0.3.3",
-    "ytdl-core": "^4.4.5"
+    "discord.js": "^12.5.1",
+    "ytdl-core": "^4.5.0"
   }
 }
