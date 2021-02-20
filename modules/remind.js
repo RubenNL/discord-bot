@@ -45,7 +45,6 @@ class Remind {
 			const longestText=Math.max(7,...reminders.map(item=>item.text.length))
 			const longestTime=Math.max(4,...reminders.map(item=>item.time.length))
 			const longestNext=Math.max(4,...reminders.map(item=>item.next.length))
-			console.log(longestText,longestTime)
 			let response='```\n';
 			response+=`+--------+${'-'.repeat(longestTime)}+${'-'.repeat(longestText)}+${'-'.repeat(longestNext)}+\n`
 			response+=`|id      |cron${' '.repeat(longestTime-4)}|message${' '.repeat(longestText-7)}|next${' '.repeat(longestNext-4)}|\n`
@@ -74,7 +73,7 @@ class Remind {
 			this.reminders=this.reminders.filter(item=>item!=reminder)
 			message.channel.send(`deleted reminder with id ${id}!`)
 			this.save();
-		}
+		} else if(action=="help") message.channel.send(`help for \`reminder\` module:\n\`\`\`${this.help()}\`\`\``)
 	}
 	loadReminder({time,text,channel}) {
 		const action=()=>this.client.channels.fetch(channel).then(channel=>channel.send(text))
@@ -84,6 +83,9 @@ class Remind {
 		fs.writeFileSync('reminders.json',JSON.stringify(this.reminders.map(reminder=>{
 			return {...reminder,job:undefined}
 		}),null,'\t'),'utf8')
+	}
+	help() {
+		return `<time/cron>-<message>`
 	}
 }
 module.exports=client=>{

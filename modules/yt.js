@@ -52,10 +52,19 @@ class Player {
 		})
 	}
 }
+function help() {
+return `play <youtube url>
+volume <0-1 (default: 0.1)>
+pause
+resume`
+}
 module.exports=client=>{
 	return ({message,parts})=>{
 		const channel=message.member.voice.channel
-		if(!channel) {
+		if(parts[0]=="help") {
+			message.channel.send(`help for \`yt\` module:\n\`\`\`${help()}\`\`\``)
+			return
+		} else if(!channel) {
 			message.channel.send('Not in voice channel.')
 			return
 		}

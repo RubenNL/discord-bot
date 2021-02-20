@@ -1,9 +1,11 @@
 module.exports=client=>{
 	const yt = require('./yt')(client);
 	const remind = require('./remind')(client);
-	return module=>{
-		if(module=="yt") return yt
-		if(module=="remind") return remind
-		return false
+	const modules={
+		yt,
+		remind,
+		help:null
 	}
+	modules.help=require('./help')(modules);
+	return module=>modules[module]
 }
