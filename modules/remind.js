@@ -29,7 +29,7 @@ class Remind {
 		} else if(action=="list") {
 			const reminders=this.reminders.filter(({channel})=>channel==message.channel)
 			const longestText=Math.max(7,...reminders.map(item=>item.text.length))
-			const longestTime=Math.max(reminders.map(item=>item.time.length))
+			const longestTime=Math.max(4,reminders.map(item=>item.time.length))
 			console.log(longestText,longestTime)
 			let response='```\n';
 			response+=`+--------+${'-'.repeat(longestTime)}+${'-'.repeat(longestText)}+\n`
@@ -41,6 +41,15 @@ class Remind {
 			response+=`+--------+${'-'.repeat(longestTime)}+${'-'.repeat(longestText)}+\n`
 			response+='```';
 			message.channel.send(response)
+		} else if(action=="delete") {
+			const id=parts.shift();
+			const reminder=this.reminders.find(item=>item.id==id)
+			if(!reminder) {
+				message.channel.send(`can't find reminder with id ${id}!`)
+				return
+			}
+			this.reminders=this.reminders.filter(item=>item!=reminder)
+			message.channel.send(`deleted reminder with id ${id}!`)
 		}
 	}
 	loadReminder({time,text,channel}) {
@@ -55,4 +64,3 @@ module.exports=client=>{
 		remind.onMessage(parts,message)
 	}
 }
- 
