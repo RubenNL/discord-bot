@@ -1,8 +1,9 @@
 var CronJob = require('cron').CronJob;
+var crypto = require("crypto");
 class Remind {
 	constructor(client) {
 		this.client=client;
-		this.dates=[] //TODO uit bestand halen
+		this.reminders=[] //TODO uit bestand halen
 	}
 	onMessage(parts,message) {
 		action=parts.shift();
@@ -13,25 +14,39 @@ class Remind {
 				return
 			}
 			let time=parts[0]
-			let useCron=false
-			if(time.split(' ').length==5) useCron=true;
-			if(time.split(':').length==2&&time.split(':').filter(item=>parseInt(item)!=null).length==2) {
-				useCron=true;
+			if(time.split(' ').length==5) {}//date is already usable
+			else if(time.split(':').length==2&&time.split(':').filter(item=>parseInt(item)!=null).length==2) {
 				time=time.split(':')
 				time=`${time[1]} ${time[0]} * * *`
-			} else if(parseInt(time)==NaN) useCron=true;
-			else useCron=false;
-			const reminder={useCron,time,message:parts[1],channel:message.channel}
+			} else {
+				message.channel.send("Reminder date invalid!")
+				return;
+			}
+			var id = crypto.randomBytes(4).toString('hex').toUpperCase()
+			const reminder={time,text:parts[1],channel:message.channel,id}
 			this.loadReminder(reminder)
-			this.dates.push(reminder)
+			this.reminders.push(reminder)
+		} else if(action=="list") {
+			const reminders=this.reminders.filter(({channel})=>channel==message.channel)
+			const longestText=Math.max(7,...reminders.map(item=>item.text.length))
+			const longestTime=Math.max(reminders.map(item=>item.time.length))
+			console.log(longestText,longestTime)
+			let response='```\n';
+			response+=`+--------+${'-'.repeat(longestTime)}+${'-'.repeat(longestText)}+\n`
+			response+=`|id      |cron${' '.repeat(longestTime-4)}|message${' '.repeat(longestText-7)}|\n`
+			response+=`+--------+${'-'.repeat(longestTime)}+${'-'.repeat(longestText)}+\n`
+			reminders.forEach(reminder=>{
+				response+=`|${reminder.id}|${reminder.time}${' '.repeat(longestTime-reminder.time.length)}|${reminder.text}${' '.repeat(longestText-reminder.text.length)}|\n`
+			})
+			response+=`+--------+${'-'.repeat(longestTime)}+${'-'.repeat(longestText)}+\n`
+			response+='```';
+			message.channel.send(response)
 		}
 	}
-	loadReminder({useCron,time,message,channel}) {
-		action=()=>channel.send(message)
-		if(useCron) {
-			const job=new CronJob(time, action, null, true);
-			console.log(job)
-		}
+	loadReminder({time,text,channel}) {
+		action=()=>channel.send(text)
+		const job=new CronJob(time, action, null, true);
+		console.log(job)
 	}
 }
 module.exports=client=>{
