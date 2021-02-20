@@ -4,7 +4,13 @@ var fs=require('fs')
 class Remind {
 	constructor(client) {
 		this.client=client;
-		this.reminders=JSON.parse(fs.readFileSync('reminders.json','utf8')).map(reminder=>{
+		let json;
+		try {
+			json=fs.readFileSync('reminders.json','utf8')
+		} catch(e) {
+			json='[]'
+		}
+		this.reminders=JSON.parse(json).map(reminder=>{
 			reminder.job=this.loadReminder(reminder)
 			return reminder
 		})
