@@ -92,10 +92,7 @@ resume`
 	}
 	static ONMESSAGE({message,parts}) {
 		const channel=message.member.voice.channel
-		if(parts[0]=="help") {
-			message.channel.send(`help for \`yt\` module:\n\`\`\`${this.help()}\`\`\``)
-			return
-		} else if(!channel) {
+		if(!channel) {
 			message.channel.send('Not in voice channel.')
 			return
 		}

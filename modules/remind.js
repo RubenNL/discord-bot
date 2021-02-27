@@ -74,7 +74,7 @@ class Remind {
 			this.reminders=this.reminders.filter(item=>item!=reminder)
 			message.channel.send(`deleted reminder with id ${id}!`)
 			this.save();
-		} else if(action=="help") message.channel.send(`help for \`reminder\` module:\n\`\`\`${this.help()}\`\`\``)
+		}
 	}
 	loadReminder({time,text,channel}) {
 		const action=()=>this.client.channels.fetch(channel).then(channel=>channel.send(text))
