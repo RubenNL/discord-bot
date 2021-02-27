@@ -2,6 +2,7 @@ var CronJob = require('cron').CronJob;
 var crypto = require("crypto");
 var fs=require('fs')
 class Remind {
+	static client;
 	constructor(client) {
 		this.client=client;
 		let json;
@@ -87,10 +88,12 @@ class Remind {
 	help() {
 		return `<time/cron>-<message>`
 	}
+	static ONMESSAGE({message,parts}) {
+		return this.singleton.onMessage(parts,message)
+	}
 }
 module.exports=client=>{
-	const remind=new Remind(client);
-	return ({message,parts})=>{
-		remind.onMessage(parts,message)
-	}
+	Remind.client=client;
+	Remind.singleton=new Remind();
+	return Remind
 }

@@ -4,6 +4,7 @@ const streamOptions = { seek: 0, volume: 0.1 };
 const urlRegex=new RegExp("([a-zA-Z0-9]+://)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?(/.*)?")
 const numbers = ["0⃣","1⃣","2⃣","3⃣","4⃣","5⃣","6⃣","7⃣","8⃣","9⃣"]
 class Player {
+	static client;
 	constructor(channel,textChannel,client) {
 		this.client=client
 		this.channel=channel;
@@ -82,27 +83,29 @@ class Player {
 			})
 		})
 	}
-}
-function help() {
-return `play <youtube url>
+	static help() {
+		return `play <youtube url>
 volume <0-1 (default: 0.1)>
 search <query>
 pause
 resume`
-}
-module.exports=client=>{
-	return ({message,parts})=>{
+	}
+	static ONMESSAGE({message,parts}) {
 		const channel=message.member.voice.channel
 		if(parts[0]=="help") {
-			message.channel.send(`help for \`yt\` module:\n\`\`\`${help()}\`\`\``)
+			message.channel.send(`help for \`yt\` module:\n\`\`\`${this.help()}\`\`\``)
 			return
 		} else if(!channel) {
 			message.channel.send('Not in voice channel.')
 			return
 		}
 		if(!channel.bot) {
-			channel.bot=new Player(channel,message.channel,client)
+			channel.bot=new Player(channel,message.channel,this.client)
 		}
 		channel.bot.onMessage(parts)
 	}
+}
+module.exports=client=>{
+	Player.client=client;
+	return Player
 }

@@ -7,5 +7,7 @@ module.exports=client=>{
 		help:null
 	}
 	modules.help=require('./help')(modules);
-	return module=>modules[module]
+	return module=>{
+		return data=>modules[module].ONMESSAGE(data)
+	}
 }
