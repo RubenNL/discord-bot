@@ -85,9 +85,7 @@ class Remind {
 			return {...reminder,job:undefined}
 		}),null,'\t'),'utf8')
 	}
-	help() {
-		return `<time/cron>-<message>`
-	}
+	static help=`<time/cron>-<message>`
 	static ONMESSAGE({message,parts}) {
 		return this.singleton.onMessage(parts,message)
 	}

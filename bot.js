@@ -2,7 +2,7 @@ const Discord = require('discord.js');
 const client = new Discord.Client();
 client.on('ready', () => {
 	console.log(`Logged in as ${client.user.tag}!`);
-	const modules=require('./modules/modules.js')(client)
+	const modules=require('./modules.js')(client)
 	client.on('message', message => {
 		if(!message.mentions.has(client.user)) return
 		if(message.author==client.user) return

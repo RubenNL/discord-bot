@@ -3,9 +3,7 @@ class Restart {
 	static ONMESSAGE({message,parts}) {
 		process.exit(1)
 	}
-	static help() {
-		return `stops bot.`
-	}
+	static help=`stops bot.`
 }
 module.exports=client=>{
 	Restart.CLIENT=client;

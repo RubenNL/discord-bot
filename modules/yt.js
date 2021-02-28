@@ -83,13 +83,11 @@ class Player {
 			})
 		})
 	}
-	static help() {
-		return `play <youtube url>
+	static help=`play <youtube url>
 volume <0-1 (default: 0.1)>
 search <query>
 pause
 resume`
-	}
 	static ONMESSAGE({message,parts}) {
 		const channel=message.member.voice.channel
 		if(!channel) {
