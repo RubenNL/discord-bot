@@ -28,7 +28,6 @@ class Player {
 			return
 		}
 		const stream = ytdl(url, { filter : 'audioonly' });
-		console.log(stream)
 		this.dispatcher = this.connection.play(stream, streamOptions);
 		this.send(`playing ${url}...`)
 		this.dispatcher.on('start',(()=>this.playing=true).bind(this))
@@ -36,6 +35,7 @@ class Player {
 			console.log("left channel");
 			this.playing=false;
 			this.channel.leave();
+			this.onClose();
 		});
 	}
 	playpause() {
@@ -96,6 +96,7 @@ resume`
 		}
 		if(!channel.bot) {
 			channel.bot=new Player(channel,message.channel,this.client)
+			channel.bot.onClose=()=>delete channel.bot;
 		}
 		channel.bot.onMessage(parts)
 	}
