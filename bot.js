@@ -12,9 +12,9 @@ client.on('ready', () => {
 		if(action.includes('@')) action=parts.shift();
 		console.log(action,parts)
 		module=modules(action)
-		if(module) module({message,parts})
+		if(module) module.ONMESSAGE({message,parts})
 		else {
-			message.channel.send(`Don't know what to do with this!`)
+			message.channel.send(`Don't know what to do with this! use \`help\` for available modules.`)
 			return
 		}
 	});
