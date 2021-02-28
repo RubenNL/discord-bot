@@ -19,7 +19,7 @@ class Remind {
 	onMessage(parts,message) {
 		action=parts.shift();
 		if(action=="add") {
-			parts=parts.join(' ').split('-')
+			parts=parts.join(' ').split(';')
 			if(parts.length!=2) {
 				message.channel.send("don't know what to do with this reminder!")
 				return
@@ -85,13 +85,20 @@ class Remind {
 			return {...reminder,job:undefined}
 		}),null,'\t'),'utf8')
 	}
-	static help=`<time/cron>-<message>`
+	static help=`add <time/cron>;<message> (time is in local time)
+delete <id>
+list
+
+add example:
+\`add 12:30;test\` sends 'test' every 12:30.
+\`add 30 16 * * 1-5;test\` sends 'test' every monday to friday on 16:30.
+`
 	static ONMESSAGE({message,parts}) {
 		return this.singleton.onMessage(parts,message)
 	}
 }
 module.exports=client=>{
 	Remind.client=client;
-	Remind.singleton=new Remind();
+	Remind.singleton=new Remind(client);
 	return Remind
 }
