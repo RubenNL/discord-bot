@@ -4,6 +4,7 @@ client.on('ready', () => {
 	console.log(`Logged in as ${client.user.tag}!`);
 	const modules=require('./modules.js')(client)
 	client.on('message', message => {
+		if(message.mentions.everyone) return
 		if(!message.mentions.has(client.user)) return
 		if(message.author==client.user) return
 		parts=message.content.split(' ')
