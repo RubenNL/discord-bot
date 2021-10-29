@@ -6,6 +6,6 @@ RUN npm ci
 
 FROM node:lts-alpine AS runner
 WORKDIR /tmp
-COPY --from=builder /tmp/node_modules .
-COPY ./ .
+COPY --from=builder /tmp ./
+COPY ./ ./
 ENTRYPOINT ["npm", "start"]
