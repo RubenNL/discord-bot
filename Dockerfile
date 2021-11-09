@@ -6,6 +6,7 @@ RUN npm ci
 
 
 FROM node:lts-alpine AS runner
+RUN apk add ffmpeg
 WORKDIR /tmp
 COPY --from=builder /tmp ./
 COPY . ./
