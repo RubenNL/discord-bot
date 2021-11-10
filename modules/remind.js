@@ -3,11 +3,13 @@ var crypto = require("crypto");
 var fs=require('fs')
 class Remind {
 	static client;
-	constructor(client) {
+	static moduleStorage;
+	constructor(client,moduleStorage) {
 		this.client=client;
+		this.moduleStorage=moduleStorage;
 		let json;
 		try {
-			json=fs.readFileSync('reminders.json','utf8')
+			json=fs.readFileSync(this.moduleStorage+'/reminders.json','utf8')
 		} catch(e) {
 			json='[]'
 		}
@@ -81,7 +83,7 @@ class Remind {
 		return new CronJob(time, action, null, true);
 	}
 	save() {
-		fs.writeFileSync('reminders.json',JSON.stringify(this.reminders.map(reminder=>{
+		fs.writeFileSync(this.moduleStorage+'/reminders.json',JSON.stringify(this.reminders.map(reminder=>{
 			return {...reminder,job:undefined}
 		}),null,'\t'),'utf8')
 	}
@@ -97,8 +99,9 @@ add example:
 		return this.singleton.onMessage(parts,message)
 	}
 }
-module.exports=client=>{
+module.exports=(client,moduleStorage)=>{
 	Remind.client=client;
-	Remind.singleton=new Remind(client);
+	Remind.moduleStorage=moduleStorage;
+	Remind.singleton=new Remind(client,moduleStorage);
 	return Remind
 }

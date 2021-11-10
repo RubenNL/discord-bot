@@ -39,6 +39,7 @@ function makeShortCode(lat, lon, zoom) {
 
 class LocationShare {
 	static client;
+	static moduleStorage;
 	static shares={}
 	constructor(id,user,channel,message) {
 		this.id=id;
@@ -75,14 +76,14 @@ class LocationShare {
 		})
 	}
 	static save() {
-		fs.writeFileSync('shares.json',JSON.stringify(Object.values(this.shares).map(share=>{
+		fs.writeFileSync(this.moduleStorage+'shares.json',JSON.stringify(Object.values(this.shares).map(share=>{
 			return {...share,object:undefined,messageObject:undefined}
 		}),null,'\t'),'utf8')
 	}
 	static load() {
 		let json;
 		try {
-			json=fs.readFileSync('shares.json','utf8')
+			json=fs.readFileSync(this.moduleStorage+'shares.json','utf8')
 		} catch(e) {
 			json='[]'
 		}
@@ -95,8 +96,9 @@ class LocationShare {
 		return new LocationShare(id,user,channel,message);
 	}
 }
-module.exports=client=>{
+module.exports=(client,moduleStorage)=>{
 	LocationShare.client=client;
+	LocationShare.moduleStorage=moduleStorage;
 	LocationShare.load();
 	return LocationShare
 }

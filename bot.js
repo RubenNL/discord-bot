@@ -1,8 +1,11 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
+const fs = require('fs');
+const storage = '/storage'
+if(!fs.existsSync(storage)) fs.mkdirSync(storage);
 client.on('ready', () => {
 	console.log(`Logged in as ${client.user.tag}!`);
-	const modules=require('./modules.js')(client)
+	const modules=require('./modules.js')(client,storage)
 	client.on('message', message => {
 		if(message.mentions.everyone) return
 		if(!message.mentions.has(client.user)) return
